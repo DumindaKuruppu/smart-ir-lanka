@@ -1,8 +1,10 @@
 package com.lanka.smartir.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -10,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.lanka.smartir.ui.components.GlassCard
 import com.lanka.smartir.ui.theme.LankaTeal
 
@@ -20,17 +23,24 @@ fun SettingsScreen(
     onPolarityShiftChange: (Boolean) -> Unit,
     onBack: () -> Unit
 ) {
+    val onSurface = MaterialTheme.colorScheme.onSurface
+    val onBackground = MaterialTheme.colorScheme.onBackground
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Settings", color = Color.White) },
+                title = { Text("Settings", color = onBackground) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = onBackground
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = Color.Transparent
                 )
             )
         },
@@ -42,10 +52,11 @@ fun SettingsScreen(
                 .padding(padding)
                 .padding(24.dp)
         ) {
+            // Compatibility Section
             Text(
                 "Compatibility",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
+                color = onBackground,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
@@ -59,12 +70,12 @@ fun SettingsScreen(
                         Text(
                             "IR Polarity Shift",
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = onSurface
                         )
                         Text(
-                            "Handle Samsung/Xiaomi IR polarity shifts",
+                            "Fix for Samsung/Xiaomi hardware",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = 0.6f)
+                            color = onSurface.copy(alpha = 0.6f)
                         )
                     }
                     Switch(
@@ -78,18 +89,72 @@ fun SettingsScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-            
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Developer Section
             Text(
-                "App Info",
+                "Developer Info",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
+                color = onBackground,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             GlassCard(modifier = Modifier.fillMaxWidth()) {
-                Text("Version: 1.0.0 (Pro)", color = Color.White)
-                Text("Region: Sri Lanka", color = Color.White.copy(alpha = 0.6f))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.Code,
+                        contentDescription = null,
+                        tint = LankaTeal,
+                        modifier = Modifier.size(32.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            "Smart IR Lanka Team",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = onSurface
+                        )
+                        Text(
+                            "Crafted in Sri Lanka 🇱🇰",
+                            fontSize = 14.sp,
+                            color = onSurface.copy(alpha = 0.6f)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    "Building high-end smart home solutions for local hardware.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = onSurface.copy(alpha = 0.8f)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { /* Open contact email or website */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = LankaTeal.copy(alpha = 0.1f)),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Contact Support", color = LankaTeal, fontWeight = FontWeight.Bold)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // App Version Footer
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        "Version 1.0.0 (Pro)",
+                        fontSize = 12.sp,
+                        color = onSurface.copy(alpha = 0.4f)
+                    )
+                    Text(
+                        "© 2024 Smart IR Lanka",
+                        fontSize = 12.sp,
+                        color = onSurface.copy(alpha = 0.4f)
+                    )
+                }
             }
         }
     }

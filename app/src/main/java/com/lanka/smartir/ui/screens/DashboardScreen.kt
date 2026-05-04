@@ -106,6 +106,28 @@ fun DashboardScreen(
                     DeviceCard(device = device, onClick = { onDeviceClick(device) })
                 }
             }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Subtle Developer Footer
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "Smart IR Lanka • Pro",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                )
+                Text(
+                    "Made with ❤️ in Sri Lanka 🇱🇰",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 10.sp,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                )
+            }
         }
     }
 }
