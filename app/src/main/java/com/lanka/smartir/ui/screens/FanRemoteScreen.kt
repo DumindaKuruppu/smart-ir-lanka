@@ -4,7 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material3.*
@@ -35,18 +35,23 @@ fun FanRemoteScreen(
     var speed by remember { mutableIntStateOf(1) }
     var isPowerOn by remember { mutableStateOf(false) }
     var isLightOn by remember { mutableStateOf(false) }
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(deviceName, color = Color.White) },
+                title = { Text(deviceName, color = MaterialTheme.colorScheme.onBackground) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = Color.Transparent
                 )
             )
         },
@@ -69,13 +74,13 @@ fun FanRemoteScreen(
                     icon = Icons.Default.PowerSettingsNew,
                     contentDescription = "Power",
                     onClick = { isPowerOn = !isPowerOn },
-                    tint = if (isPowerOn) VibrantAmber else Color.White
+                    tint = if (isPowerOn) VibrantAmber else onSurfaceColor
                 )
                 GlassIconButton(
                     icon = Icons.Default.Lightbulb,
                     contentDescription = "Light",
                     onClick = { isLightOn = !isLightOn },
-                    tint = if (isLightOn) LankaTeal else Color.White
+                    tint = if (isLightOn) LankaTeal else onSurfaceColor
                 )
             }
 
@@ -98,7 +103,7 @@ fun FanRemoteScreen(
                     Text(
                         text = "SPEED",
                         fontSize = 14.sp,
-                        color = Color.White.copy(alpha = 0.5f)
+                        color = onSurfaceColor.copy(alpha = 0.5f)
                     )
                 }
             }
@@ -109,7 +114,7 @@ fun FanRemoteScreen(
                     "TIMER SETTINGS",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White.copy(alpha = 0.5f),
+                    color = onSurfaceColor.copy(alpha = 0.5f),
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 Row(
@@ -121,7 +126,7 @@ fun FanRemoteScreen(
                             modifier = Modifier.weight(1f),
                             onClick = { /* Set Timer */ }
                         ) {
-                            Text(timer, color = Color.White, fontWeight = FontWeight.Medium)
+                            Text(timer, color = onSurfaceColor, fontWeight = FontWeight.Medium)
                         }
                     }
                 }
@@ -135,12 +140,12 @@ fun SpeedDial(
     speed: Int,
     onSpeedChange: (Int) -> Unit
 ) {
+    val trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
     Canvas(modifier = Modifier
         .size(250.dp)
         .pointerInput(Unit) {
             detectTapGestures { offset ->
                 // Simple hit detection for 5 segments
-                // This is a simplified version for UI representation
             }
         }
     ) {
@@ -151,7 +156,7 @@ fun SpeedDial(
         for (i in 1..5) {
             val startAngle = 150f + (i - 1) * 48f
             drawArc(
-                color = if (i <= speed) LankaTeal else Color.White.copy(alpha = 0.1f),
+                color = if (i <= speed) LankaTeal else trackColor,
                 startAngle = startAngle,
                 sweepAngle = 40f,
                 useCenter = false,
@@ -162,7 +167,7 @@ fun SpeedDial(
         }
     }
 
-    // Interactive buttons around the dial or just tap to change
+    // Interactive buttons around the dial
     Box(modifier = Modifier.size(280.dp)) {
         for (i in 1..5) {
             val angle = (170f + (i - 1) * 50f) * (PI / 180f).toFloat()

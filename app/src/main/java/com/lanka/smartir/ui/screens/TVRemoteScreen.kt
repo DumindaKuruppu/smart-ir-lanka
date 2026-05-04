@@ -5,9 +5,9 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -31,14 +31,20 @@ fun TVRemoteScreen(
 ) {
     var showNumPad by remember { mutableStateOf(false) }
     var isPowerOn by remember { mutableStateOf(false) }
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
+    val onBackground = MaterialTheme.colorScheme.onBackground
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(deviceName, color = Color.White) },
+                title = { Text(deviceName, color = onBackground) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = onBackground
+                        )
                     }
                 },
                 actions = {
@@ -46,12 +52,12 @@ fun TVRemoteScreen(
                         Icon(
                             if (showNumPad) Icons.Default.Apps else Icons.Default.Dialpad,
                             contentDescription = "Toggle NumPad",
-                            tint = if (showNumPad) LankaTeal else Color.White
+                            tint = if (showNumPad) LankaTeal else onBackground
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = Color.Transparent
                 )
             )
         },
@@ -75,7 +81,7 @@ fun TVRemoteScreen(
                     icon = Icons.Default.PowerSettingsNew,
                     contentDescription = "Power",
                     onClick = { isPowerOn = !isPowerOn },
-                    tint = if (isPowerOn) VibrantAmber else Color.White
+                    tint = if (isPowerOn) VibrantAmber else onSurfaceColor
                 )
                 GlassIconButton(
                     icon = Icons.Default.VolumeOff,
@@ -127,6 +133,7 @@ fun TVRemoteScreen(
 
 @Composable
 fun DPad() {
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
     Box(
         modifier = Modifier.size(220.dp),
         contentAlignment = Alignment.Center
@@ -153,12 +160,13 @@ fun DirectionalButton(icon: androidx.compose.ui.graphics.vector.ImageVector, mod
         onClick = { },
         modifier = modifier.size(60.dp)
     ) {
-        Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(36.dp))
+        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(36.dp))
     }
 }
 
 @Composable
 fun NumberPad() {
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.padding(vertical = 16.dp)
@@ -179,7 +187,7 @@ fun NumberPad() {
                         onClick = { },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(digit, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text(digit, color = onSurfaceColor, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -189,12 +197,13 @@ fun NumberPad() {
 
 @Composable
 fun VerticalControlGroup(label: String) {
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         GlassIconButton(icon = Icons.Default.Add, contentDescription = "+", onClick = { })
-        Text(label, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+        Text(label, color = onSurfaceColor, fontWeight = FontWeight.Bold, fontSize = 12.sp)
         GlassIconButton(icon = Icons.Default.Remove, contentDescription = "-", onClick = { })
     }
 }

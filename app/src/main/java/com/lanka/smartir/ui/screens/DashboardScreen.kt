@@ -20,9 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lanka.smartir.ui.components.GlassCard
-import com.lanka.smartir.ui.components.GlassIconButton
 import com.lanka.smartir.ui.theme.LankaTeal
-import com.lanka.smartir.ui.theme.VibrantAmber
 
 data class Device(
     val id: String,
@@ -57,16 +55,20 @@ fun DashboardScreen(
                     Text(
                         "Smart IR Lanka",
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 },
                 actions = {
                     IconButton(onClick = onSettingsClick) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = "Settings",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = Color.Transparent
                 )
             )
         },
@@ -90,7 +92,7 @@ fun DashboardScreen(
             Text(
                 "My Devices",
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
 
@@ -128,12 +130,12 @@ fun DeviceCard(device: Device, onClick: () -> Unit) {
                 text = device.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = device.brand,
                 fontSize = 12.sp,
-                color = Color.White.copy(alpha = 0.6f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
         }
     }

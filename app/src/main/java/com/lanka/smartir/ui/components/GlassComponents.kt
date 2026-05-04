@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -22,11 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.lanka.smartir.ui.theme.GlassBorder
-import com.lanka.smartir.ui.theme.GlassWhite
 
 @Composable
 fun GlassButton(
@@ -37,18 +32,19 @@ fun GlassButton(
     val view = LocalView.current
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+    val colorScheme = MaterialTheme.colorScheme
 
     val backgroundBrush = if (isPressed) {
         Brush.verticalGradient(
             colors = listOf(
-                Color.White.copy(alpha = 0.2f),
-                Color.White.copy(alpha = 0.05f)
+                colorScheme.onSurface.copy(alpha = 0.15f),
+                colorScheme.onSurface.copy(alpha = 0.05f)
             )
         )
     } else {
         Brush.verticalGradient(
             colors = listOf(
-                GlassWhite,
+                colorScheme.tertiary,
                 Color.Transparent
             )
         )
@@ -58,7 +54,7 @@ fun GlassButton(
         modifier = modifier
             .clip(RoundedCornerShape(24.dp))
             .background(backgroundBrush)
-            .border(1.dp, GlassBorder, RoundedCornerShape(24.dp))
+            .border(1.dp, colorScheme.outline, RoundedCornerShape(24.dp))
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -85,11 +81,12 @@ fun GlassIconButton(
     contentDescription: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    tint: Color = Color.White
+    tint: Color = MaterialTheme.colorScheme.onSurface
 ) {
     val view = LocalView.current
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+    val colorScheme = MaterialTheme.colorScheme
 
     Surface(
         modifier = modifier
@@ -103,9 +100,9 @@ fun GlassIconButton(
                     onClick()
                 }
             ),
-        color = if (isPressed) Color.White.copy(alpha = 0.2f) else GlassWhite,
+        color = if (isPressed) colorScheme.onSurface.copy(alpha = 0.12f) else colorScheme.tertiary,
         shape = RoundedCornerShape(24.dp),
-        border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder)
+        border = androidx.compose.foundation.BorderStroke(1.dp, colorScheme.outline)
     ) {
         Box(contentAlignment = Alignment.Center) {
             Icon(
@@ -123,18 +120,19 @@ fun GlassCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val colorScheme = MaterialTheme.colorScheme
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(24.dp))
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        GlassWhite,
+                        colorScheme.tertiary,
                         Color.Transparent
                     )
                 )
             )
-            .border(1.dp, GlassBorder, RoundedCornerShape(24.dp))
+            .border(1.dp, colorScheme.outline, RoundedCornerShape(24.dp))
             .padding(20.dp)
     ) {
         Column {
