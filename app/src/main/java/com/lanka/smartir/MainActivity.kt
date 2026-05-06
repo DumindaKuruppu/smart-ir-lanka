@@ -4,16 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Tv
-import androidx.compose.material.icons.filled.WindPower
 import androidx.compose.runtime.*
+import com.lanka.smartir.data.DeviceRepository
 import com.lanka.smartir.ui.screens.*
 import com.lanka.smartir.ui.theme.SmartIRLankaTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var deviceRepository: DeviceRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        deviceRepository = DeviceRepository(this)
         enableEdgeToEdge()
         setContent {
             var currentScreen by remember { mutableStateOf<Screen>(Screen.Dashboard) }
@@ -21,12 +22,7 @@ class MainActivity : ComponentActivity() {
             var irPolarityShift by remember { mutableStateOf(false) }
 
             var userDevices by remember { 
-                mutableStateOf(
-                    listOf(
-                        Device("1", "Living Room TV", "Innovex", DeviceType.TV, Icons.Default.Tv),
-                        Device("2", "Master Fan", "Abans", DeviceType.FAN, Icons.Default.WindPower)
-                    )
-                )
+                mutableStateOf(deviceRepository.getUserDevices())
             }
 
             SmartIRLankaTheme {
@@ -44,9 +40,11 @@ class MainActivity : ComponentActivity() {
                     }
                     is Screen.AddDevice -> {
                         AddDeviceScreen(
+                            availableDevices = deviceRepository.getAvailableDevices(),
                             onDeviceAdded = { device ->
                                 if (!userDevices.any { it.id == device.id }) {
-                                    userDevices = userDevices + device
+                                    deviceRepository.saveDeviceId(device.id)
+                                    userDevices = deviceRepository.getUserDevices()
                                 }
                                 currentScreen = Screen.Dashboard
                             },

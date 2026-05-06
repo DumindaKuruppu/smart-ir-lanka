@@ -20,20 +20,10 @@ import com.lanka.smartir.ui.theme.LankaTeal
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddDeviceScreen(
+    availableDevices: List<Device>,
     onDeviceAdded: (Device) -> Unit,
     onBack: () -> Unit
 ) {
-    val availableDevices = listOf(
-        Device("1", "Living Room TV", "Innovex", DeviceType.TV, Icons.Default.Tv),
-        Device("2", "Master Fan", "Abans", DeviceType.FAN, Icons.Default.WindPower),
-        Device("3", "Bedroom AC", "Innovex", DeviceType.AC, Icons.Default.Air),
-        Device("4", "Dialog TV", "Dialog", DeviceType.TV, Icons.Default.Tv),
-        Device("5", "Peo TV", "SLT", DeviceType.TV, Icons.Default.Tv),
-        Device("6", "Guest Room Fan", "KDK", DeviceType.FAN, Icons.Default.WindPower),
-        Device("7", "Kitchen TV", "Samsung", DeviceType.TV, Icons.Default.Tv),
-        Device("8", "Office AC", "LG", DeviceType.AC, Icons.Default.Air)
-    )
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
