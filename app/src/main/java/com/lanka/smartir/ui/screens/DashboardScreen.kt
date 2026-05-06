@@ -37,17 +37,11 @@ enum class DeviceType {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
+    devices: List<Device>,
     onDeviceClick: (Device) -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onAddDeviceClick: () -> Unit
 ) {
-    val devices = listOf(
-        Device("1", "Living Room TV", "Innovex", DeviceType.TV, Icons.Default.Tv),
-        Device("2", "Master Fan", "Abans", DeviceType.FAN, Icons.Default.WindPower),
-        Device("3", "Bedroom AC", "Innovex", DeviceType.AC, Icons.Default.Air),
-        Device("4", "Dialog TV", "Dialog", DeviceType.TV, Icons.Default.Tv),
-        Device("5", "Peo TV", "SLT", DeviceType.TV, Icons.Default.Tv)
-    )
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -74,7 +68,7 @@ fun DashboardScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* Add device */ },
+                onClick = onAddDeviceClick,
                 containerColor = LankaTeal,
                 contentColor = Color.White
             ) {

@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material.icons.filled.WindPower
 import androidx.compose.runtime.*
 import com.lanka.smartir.ui.screens.*
 import com.lanka.smartir.ui.theme.SmartIRLankaTheme
@@ -17,15 +20,37 @@ class MainActivity : ComponentActivity() {
             var selectedDevice by remember { mutableStateOf<Device?>(null) }
             var irPolarityShift by remember { mutableStateOf(false) }
 
+            var userDevices by remember { 
+                mutableStateOf(
+                    listOf(
+                        Device("1", "Living Room TV", "Innovex", DeviceType.TV, Icons.Default.Tv),
+                        Device("2", "Master Fan", "Abans", DeviceType.FAN, Icons.Default.WindPower)
+                    )
+                )
+            }
+
             SmartIRLankaTheme {
                 when (currentScreen) {
                     is Screen.Dashboard -> {
                         DashboardScreen(
+                            devices = userDevices,
                             onDeviceClick = { device ->
                                 selectedDevice = device
                                 currentScreen = if (device.type == DeviceType.FAN) Screen.FanRemote else Screen.TVRemote
                             },
-                            onSettingsClick = { currentScreen = Screen.Settings }
+                            onSettingsClick = { currentScreen = Screen.Settings },
+                            onAddDeviceClick = { currentScreen = Screen.AddDevice }
+                        )
+                    }
+                    is Screen.AddDevice -> {
+                        AddDeviceScreen(
+                            onDeviceAdded = { device ->
+                                if (!userDevices.any { it.id == device.id }) {
+                                    userDevices = userDevices + device
+                                }
+                                currentScreen = Screen.Dashboard
+                            },
+                            onBack = { currentScreen = Screen.Dashboard }
                         )
                     }
                     is Screen.FanRemote -> {
@@ -55,6 +80,7 @@ class MainActivity : ComponentActivity() {
 
 sealed class Screen {
     object Dashboard : Screen()
+    object AddDevice : Screen()
     object FanRemote : Screen()
     object TVRemote : Screen()
     object Settings : Screen()
