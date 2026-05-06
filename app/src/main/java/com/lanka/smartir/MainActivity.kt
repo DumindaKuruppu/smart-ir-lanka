@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.WindPower
 import androidx.compose.runtime.*
 import com.lanka.smartir.data.DeviceRepository
 import com.lanka.smartir.ir.IrController
@@ -60,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     }
                     is Screen.FanRemote -> {
                         FanRemoteScreen(
-                            deviceName = selectedDevice?.name ?: "Fan Remote",
+                            device = selectedDevice ?: Device("0", "Unknown", "Unknown", DeviceType.FAN, Icons.Default.WindPower),
                             irController = irController,
                             onBack = { currentScreen = Screen.Dashboard }
                         )

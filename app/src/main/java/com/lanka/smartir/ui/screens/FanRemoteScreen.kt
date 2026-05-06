@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.PowerSettingsNew
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,19 +31,20 @@ import kotlin.math.sin
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FanRemoteScreen(
-    deviceName: String,
+    device: Device,
     irController: IrController,
     onBack: () -> Unit
 ) {
     var speed by remember { mutableIntStateOf(1) }
     var isPowerOn by remember { mutableStateOf(false) }
-    var isLightOn by remember { mutableStateOf(false) }
+    var isOscillating by remember { mutableStateOf(false) }
+    val isPanasonic = device.brand.equals("Panasonic", ignoreCase = true)
     val onSurfaceColor = MaterialTheme.colorScheme.onSurface
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(deviceName, color = MaterialTheme.colorScheme.onBackground) },
+                title = { Text(device.name, color = MaterialTheme.colorScheme.onBackground) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -67,7 +69,7 @@ fun FanRemoteScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Power and Light Buttons
+            // Power, Light and Oscillation Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -75,14 +77,26 @@ fun FanRemoteScreen(
                 GlassIconButton(
                     icon = Icons.Default.PowerSettingsNew,
                     contentDescription = "Power",
-                    onClick = { isPowerOn = !isPowerOn },
+                    onClick = {
+                        isPowerOn = !isPowerOn
+                        if (isPanasonic) irController.sendPanasonicFanPower()
+                    },
                     tint = if (isPowerOn) VibrantAmber else onSurfaceColor
+                )
+                GlassIconButton(
+                    icon = Icons.Default.Sync,
+                    contentDescription = "Oscillation",
+                    onClick = {
+                        isOscillating = !isOscillating
+                        if (isPanasonic) irController.sendPanasonicFanOscillation()
+                    },
+                    tint = if (isOscillating) LankaTeal else onSurfaceColor
                 )
                 GlassIconButton(
                     icon = Icons.Default.Lightbulb,
                     contentDescription = "Light",
-                    onClick = { isLightOn = !isLightOn },
-                    tint = if (isLightOn) LankaTeal else onSurfaceColor
+                    onClick = { /* Light Toggle */ },
+                    tint = onSurfaceColor
                 )
             }
 
@@ -93,7 +107,10 @@ fun FanRemoteScreen(
             ) {
                 SpeedDial(
                     speed = speed,
-                    onSpeedChange = { speed = it }
+                    onSpeedChange = {
+                        speed = it
+                        if (isPanasonic) irController.sendPanasonicFanSpeed()
+                    }
                 )
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
@@ -126,7 +143,9 @@ fun FanRemoteScreen(
                     listOf("1h", "2h", "4h").forEach { timer ->
                         GlassButton(
                             modifier = Modifier.weight(1f),
-                            onClick = { /* Set Timer */ }
+                            onClick = {
+                                if (isPanasonic) irController.sendPanasonicFanTimer()
+                            }
                         ) {
                             Text(timer, color = onSurfaceColor, fontWeight = FontWeight.Medium)
                         }
