@@ -6,18 +6,25 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.*
 import com.lanka.smartir.data.DeviceRepository
+import com.lanka.smartir.ir.IrController
 import com.lanka.smartir.ui.screens.*
 import com.lanka.smartir.ui.theme.SmartIRLankaTheme
 
 class MainActivity : ComponentActivity() {
     private lateinit var deviceRepository: DeviceRepository
+    private lateinit var irController: IrController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         deviceRepository = DeviceRepository(this)
+        irController = IrController(this)
         enableEdgeToEdge()
         setContent {
-            var currentScreen by remember { mutableStateOf<Screen>(Screen.Dashboard) }
+            var currentScreen by remember { 
+                mutableStateOf<Screen>(
+                    if (irController.hasIrEmitter()) Screen.Dashboard else Screen.NoIrEmitter
+                )
+            }
             var selectedDevice by remember { mutableStateOf<Device?>(null) }
             var irPolarityShift by remember { mutableStateOf(false) }
 
@@ -54,14 +61,19 @@ class MainActivity : ComponentActivity() {
                     is Screen.FanRemote -> {
                         FanRemoteScreen(
                             deviceName = selectedDevice?.name ?: "Fan Remote",
+                            irController = irController,
                             onBack = { currentScreen = Screen.Dashboard }
                         )
                     }
                     is Screen.TVRemote -> {
                         TVRemoteScreen(
                             deviceName = selectedDevice?.name ?: "TV Remote",
+                            irController = irController,
                             onBack = { currentScreen = Screen.Dashboard }
                         )
+                    }
+                    is Screen.NoIrEmitter -> {
+                        NoIrEmitterScreen()
                     }
                     is Screen.Settings -> {
                         SettingsScreen(
@@ -82,4 +94,5 @@ sealed class Screen {
     object FanRemote : Screen()
     object TVRemote : Screen()
     object Settings : Screen()
+    object NoIrEmitter : Screen()
 }

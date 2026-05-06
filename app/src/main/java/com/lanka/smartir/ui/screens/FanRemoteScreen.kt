@@ -18,6 +18,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lanka.smartir.ir.IrController
 import com.lanka.smartir.ui.components.GlassButton
 import com.lanka.smartir.ui.components.GlassIconButton
 import com.lanka.smartir.ui.theme.LankaTeal
@@ -30,6 +31,7 @@ import kotlin.math.sin
 @Composable
 fun FanRemoteScreen(
     deviceName: String,
+    irController: IrController,
     onBack: () -> Unit
 ) {
     var speed by remember { mutableIntStateOf(1) }
